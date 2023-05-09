@@ -6,7 +6,7 @@ using UnityEngine;
 public class MoveWithCharCont : IMover
 {
     private readonly CharacterController _characterController;
-    private float rotationFactor = 15.0f;
+    private float rotationFactor = 20.0f;
 
     
     public MoveWithCharCont(IEntityController entityController)
