@@ -6,7 +6,9 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectsParent
 {
     [SerializeField] private Transform _counterTopPoint;
     
-    public virtual event System.Action<string> OnAnimationPlay; 
+    public virtual event System.Action<string> OnAnimationPlay;
+    //public virtual event EventHandler<EventArgs> OnParticlePlay;  
+    public virtual event System.Action<bool> OnParticlePlay;
 
     public KitchenObjectController KitchenObject { get; set; }
 

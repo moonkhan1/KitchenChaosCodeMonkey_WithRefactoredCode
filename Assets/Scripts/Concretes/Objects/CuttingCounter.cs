@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CuttingCounter : BaseCounter
+public class CuttingCounter : BaseCounter, IHasProgress
 {
    [SerializeField] private CutRecipeSO[] cutKitchenObjectArray;
    public event Action<float> OnProgress;
