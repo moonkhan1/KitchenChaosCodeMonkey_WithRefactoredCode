@@ -11,6 +11,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
    public override event Action<string> OnAnimationPlay;
    private const string CUT_ANIMATION = "Cut";
    private int cuttingProgress;
+
    public override void Interact(PlayerController player)
    {
       if (!HasKitchenObject())
@@ -22,7 +23,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
             cuttingProgress = 0;
             CutRecipeSO cutRecipeSO = GetOutputFromInput(KitchenObject.GetKitchenObjectSO());
             OnProgress?.Invoke((float)cuttingProgress / cutRecipeSO.cuttingProgressMax);
-            
+
          }
       }
       else
@@ -30,6 +31,16 @@ public class CuttingCounter : BaseCounter, IHasProgress
          if (!player.HasKitchenObject())
          {
             KitchenObject.KitchenObjectsParent = player;
+         }
+         else
+         {
+            if (player.KitchenObject.TryGetPlate(out PlateKitchenObject plateKitchenObject))
+            {
+               if (plateKitchenObject.TryAddIngredient(KitchenObject.GetKitchenObjectSO()))
+               {
+                  KitchenObject.DestroySelf();
+               }
+            }
          }
       }
    }
@@ -44,7 +55,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
          OnAnimationPlay?.Invoke(CUT_ANIMATION);
          if (cuttingProgress >= cutRecipeSO.cuttingProgressMax)
          {
-            KitchenObjecsSO outputKitchenObject = cutRecipeSO.output;
+            KitchenObjectsSO outputKitchenObject = cutRecipeSO.output;
             KitchenObject.DestroySelf();
             KitchenObjectController.SpawnKitchenObject(outputKitchenObject, this);
          }
@@ -52,15 +63,15 @@ public class CuttingCounter : BaseCounter, IHasProgress
       }
    }
 
-   private CutRecipeSO GetOutputFromInput(KitchenObjecsSO kitchenObjecsSO)
+   private CutRecipeSO GetOutputFromInput(KitchenObjectsSO kitchenObjectsSo)
    {
-      CutRecipeSO cutRecipeSo = cutKitchenObjectArray.First(u => u.input == kitchenObjecsSO);
+      CutRecipeSO cutRecipeSo = cutKitchenObjectArray.First(u => u.input == kitchenObjectsSo);
       return cutRecipeSo;
    }
 
-   private bool HasRecipeWithInput(KitchenObjecsSO inputKitchenObjecsSo)
+   private bool HasRecipeWithInput(KitchenObjectsSO inputKitchenObjectsSo)
    {
-      if (cutKitchenObjectArray.Any(u => u.input == inputKitchenObjecsSo))
+      if (cutKitchenObjectArray.Any(u => u.input == inputKitchenObjectsSo))
       {
          return true;
          

@@ -89,23 +89,37 @@ public class StoveCounter : BaseCounter, IHasProgress
                 OnParticlePlay?.Invoke(false);
                 OnProgress?.Invoke(0f);
             }
+            else
+            {
+                if (player.KitchenObject.TryGetPlate(out PlateKitchenObject plateKitchenObject))
+                {
+                    if (plateKitchenObject.TryAddIngredient(KitchenObject.GetKitchenObjectSO()))
+                    {
+                        KitchenObject.DestroySelf();
+                        _state = State.Idle;
+                        OnParticlePlay?.Invoke(false);
+                        OnProgress?.Invoke(0f);
+                    }
+                    
+                }
+            }
         }
     }
     
-    private FryingRecipeSO GetFriedOutputFromInput(KitchenObjecsSO kitchenObjecsSO)
+    private FryingRecipeSO GetFriedOutputFromInput(KitchenObjectsSO kitchenObjectsSo)
     {
-        FryingRecipeSO fryingRecipeSo = _fryingRecipeSoArray.First(u => u.input == kitchenObjecsSO);
+        FryingRecipeSO fryingRecipeSo = _fryingRecipeSoArray.First(u => u.input == kitchenObjectsSo);
         return fryingRecipeSo;
     }
-    private BurnedRecipeSO GetBurnedOutputFromInput(KitchenObjecsSO kitchenObjecsSO)
+    private BurnedRecipeSO GetBurnedOutputFromInput(KitchenObjectsSO kitchenObjectsSo)
     {
-        BurnedRecipeSO burnedRecipeSo = _burnedRecipeSoArray.First(u => u.input == kitchenObjecsSO);
+        BurnedRecipeSO burnedRecipeSo = _burnedRecipeSoArray.First(u => u.input == kitchenObjectsSo);
         return burnedRecipeSo;
     }
 
-    private bool HasRecipeWithInput(KitchenObjecsSO inputKitchenObjecsSo)
+    private bool HasRecipeWithInput(KitchenObjectsSO inputKitchenObjectsSo)
     {
-        if (_fryingRecipeSoArray.Any(u => u.input == inputKitchenObjecsSo))
+        if (_fryingRecipeSoArray.Any(u => u.input == inputKitchenObjectsSo))
         {
             return true;
          

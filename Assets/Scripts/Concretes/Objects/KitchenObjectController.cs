@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class KitchenObjectController : MonoBehaviour
 {
-    [SerializeField] private KitchenObjecsSO _kitchenObjecsSo;
+    [FormerlySerializedAs("_kitchenObjecsSo")] [SerializeField] private KitchenObjectsSO kitchenObjectsSo;
 
     private IKitchenObjectsParent _kitchenObjects;
     public IKitchenObjectsParent KitchenObjectsParent
@@ -29,19 +30,30 @@ public class KitchenObjectController : MonoBehaviour
         }
     }
 
-    public static KitchenObjectController SpawnKitchenObject(KitchenObjecsSO kitchenObjecsSo,
+    public static KitchenObjectController SpawnKitchenObject(KitchenObjectsSO kitchenObjectsSo,
         IKitchenObjectsParent kitchenObjectsParent)
     {
-        Transform kitchenObjectTransform = Instantiate(kitchenObjecsSo.prefab);
+        Transform kitchenObjectTransform = Instantiate(kitchenObjectsSo.prefab);
         KitchenObjectController kitchenObject = kitchenObjectTransform.GetComponent<KitchenObjectController>();
         kitchenObject.KitchenObjectsParent = kitchenObjectsParent;
 
         return kitchenObject;
     }
 
-    public KitchenObjecsSO GetKitchenObjectSO()
+    public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)
     {
-        return _kitchenObjecsSo;
+        if (this is PlateKitchenObject)
+        {
+            plateKitchenObject = this as PlateKitchenObject;
+            return true;
+        }
+        plateKitchenObject = null;
+        return false;
+    }
+
+    public KitchenObjectsSO GetKitchenObjectSO()
+    {
+        return kitchenObjectsSo;
     }
 
     public void DestroySelf()
