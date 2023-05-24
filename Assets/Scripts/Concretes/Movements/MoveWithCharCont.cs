@@ -15,60 +15,62 @@ public class MoveWithCharCont : IMover
     }
     public void MoveAction(Vector3 direction, float speed)
     {
-        if(direction.magnitude == 0f) return;
-        //Vector3 worldPosition = _characterController.transform.TransformDirection(direction);
-        
-        // Detection objects in front of our Player
-        var moveDistance = speed * Time.fixedDeltaTime;
-        const float playerRadius = 0.7f;
-        const float playerHeight = 2f;
-        
+        if (direction.magnitude == 0f)
+            return;
+
         Vector3 movement = direction * Time.fixedDeltaTime * speed;
-        bool canMove =  !Physics.CapsuleCast(_characterController.transform.position,_characterController.transform.position + Vector3.up *  playerHeight, playerRadius, movement, moveDistance);
 
-        // For Diagonal movements
-        if(!canMove)
+        if (!CanMoveInDirection(movement))
         {
-            // Can not move towards movement
-            //Attempts only X movement
-            Vector3 moveDirX = new Vector3(movement.x, 0, 0);
-            canMove = movement.x != 0 && !Physics.CapsuleCast(_characterController.transform.position,_characterController.transform.position + Vector3.up *  playerHeight, playerRadius, moveDirX, moveDistance);
-
-            if (canMove)
+            if (CanMoveOnlyInX(movement))
             {
-                // Can move only on the X
-                movement = moveDirX;
+                movement = new Vector3(movement.x, 0f, 0f);
+            }
+            else if (CanMoveOnlyInZ(movement))
+            {
+                movement = new Vector3(0f, 0f, movement.z);
             }
             else
             {
-                // Con not move only on the X
-                
-                // Attempt ony Z movement
-                Vector3 moveDirZ = new Vector3(0, 0, movement.z);
-                canMove = movement.z != 0 && !Physics.CapsuleCast(_characterController.transform.position,_characterController.transform.position + Vector3.up *  playerHeight, playerRadius, moveDirZ, moveDistance);
-                if (canMove)
-                {
-                    // Can move only on the Z
-                    movement = moveDirZ;
-                }
-                else
-                {
-                    // Con not move in any direction
-                }
+                // Cannot move in any direction
+                return;
             }
         }
-        
-        if (canMove)
-        {
-            _characterController.Move(movement);
-            movement.y = 0;
-            if (movement == Vector3.zero) return;
-            _characterController.transform.rotation = Quaternion.LookRotation(movement);
-        }
-        //_characterController.transform.forward = Vector3.Slerp(_characterController.transform.forward, movement,rotationFactor* Time.deltaTime);
+
+        _characterController.Move(movement);
+        movement.y = 0f;
+        if (movement == Vector3.zero)
+            return;
+        _characterController.transform.rotation = Quaternion.LookRotation(movement);
     }
 
-   
+    private bool CanMoveInDirection(Vector3 movement)
+    {
+        const float playerRadius = 0.7f;
+        const float playerHeight = 2f;
+        var moveDistance = movement.magnitude;
+
+        return !Physics.CapsuleCast(_characterController.transform.position, _characterController.transform.position + Vector3.up * playerHeight, playerRadius, movement, moveDistance);
+    }
+
+    private bool CanMoveOnlyInX(Vector3 movement)
+    {
+        const float playerRadius = 0.7f;
+        const float playerHeight = 2f;
+        var moveDistance = movement.magnitude;
+
+        Vector3 moveDirX = new Vector3(movement.x, 0f, 0f);
+        return movement.x != 0f && !Physics.CapsuleCast(_characterController.transform.position, _characterController.transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
+    }
+
+    private bool CanMoveOnlyInZ(Vector3 movement)
+    {
+        const float playerRadius = 0.7f;
+        const float playerHeight = 2f;
+        var moveDistance = movement.magnitude;
+
+        Vector3 moveDirZ = new Vector3(0f, 0f, movement.z);
+        return movement.z != 0f && !Physics.CapsuleCast(_characterController.transform.position, _characterController.transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
+    }
     
-  
 }
