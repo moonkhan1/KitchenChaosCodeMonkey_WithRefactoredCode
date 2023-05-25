@@ -15,12 +15,16 @@ public class InputReader : MonoBehaviour, IInputReader
     private void Awake()
     {
         _inputs = new Inputs();
-        _inputs.Player.Enable();
+        
+    }
+    private void OnEnable()
+    {
         _inputs.Player.Move.started += MovementAction;
         _inputs.Player.Move.performed += MovementAction;
         _inputs.Player.Move.canceled += MovementAction;
         _inputs.Player.Interact.performed += OnInteractionPerformed;
         _inputs.Player.InteractAlternative.performed += OnInteractionAlternativePerformed;
+        _inputs.Player.Enable();
     }
 
     private void OnInteractionAlternativePerformed(InputAction.CallbackContext context)
@@ -38,5 +42,14 @@ public class InputReader : MonoBehaviour, IInputReader
         Vector2 oldDirection = context.ReadValue<Vector2>();
         IsMoving = oldDirection.x != 0 || oldDirection.y != 0;
         Direction = new Vector3(oldDirection.x, 0f, oldDirection.y);
+    }
+
+    private void OnDisable()
+    {
+        _inputs.Player.Move.started -= MovementAction;
+        _inputs.Player.Move.performed -= MovementAction;
+        _inputs.Player.Move.canceled -= MovementAction;
+        _inputs.Player.Interact.performed -= OnInteractionPerformed;
+        _inputs.Player.InteractAlternative.performed -= OnInteractionAlternativePerformed;
     }
 }

@@ -8,6 +8,7 @@ public class StoveCounter : BaseCounter, IHasProgress
 {
     public override event Action<bool> OnParticlePlay;
     public event Action<float> OnProgress;
+    public event Action<State> OnStateChanged; 
     public enum State
     {
         Idle,
@@ -30,6 +31,7 @@ public class StoveCounter : BaseCounter, IHasProgress
             {
                 case State.Idle:
                     OnParticlePlay?.Invoke(false);
+                    OnStateChanged?.Invoke(State.Idle);
                     break;
                 case State.Frying:
                     _fryingTimer += Time.deltaTime;
@@ -54,10 +56,12 @@ public class StoveCounter : BaseCounter, IHasProgress
                         _state = State.Burned;
                         OnParticlePlay?.Invoke(true);
                         OnProgress?.Invoke(0f);
+                        OnStateChanged?.Invoke(State.Fried);
                     }
                     break;
                 case State.Burned:
                     OnParticlePlay?.Invoke(false);
+                    OnStateChanged?.Invoke(State.Burned);
                     break;
             }
         }
@@ -75,6 +79,7 @@ public class StoveCounter : BaseCounter, IHasProgress
                 player.KitchenObject.KitchenObjectsParent = this;
                 _fryingRecipeSo = GetFriedOutputFromInput(KitchenObject.GetKitchenObjectSO());
                 _state = State.Frying;
+                OnStateChanged?.Invoke(State.Frying);
                 _fryingTimer = 0f;
                 OnParticlePlay?.Invoke(true);
                 OnProgress?.Invoke(_fryingTimer / _fryingRecipeSo.fryingTimerMax);

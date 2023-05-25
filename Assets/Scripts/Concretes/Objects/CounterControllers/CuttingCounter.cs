@@ -9,6 +9,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
    [SerializeField] private CutRecipeSO[] cutKitchenObjectArray;
    public event Action<float> OnProgress;
    public override event Action<string> OnAnimationPlay;
+   public static event Action<CuttingCounter> OnCut; 
    private const string CUT_ANIMATION = "Cut";
    private int cuttingProgress;
 
@@ -53,6 +54,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
          CutRecipeSO cutRecipeSO = GetOutputFromInput(KitchenObject.GetKitchenObjectSO());
          OnProgress?.Invoke((float)cuttingProgress / cutRecipeSO.cuttingProgressMax);
          OnAnimationPlay?.Invoke(CUT_ANIMATION);
+         OnCut?.Invoke(this);
          if (cuttingProgress >= cutRecipeSO.cuttingProgressMax)
          {
             KitchenObjectsSO outputKitchenObject = cutRecipeSO.output;

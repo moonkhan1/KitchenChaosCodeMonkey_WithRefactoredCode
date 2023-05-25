@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour, IEntityController, IKitchenObject
     {
         public BaseCounter selectedCounter;
     }
-    
+
+    public event Action OnPickupSomething; 
     [SerializeField] private float _speed = 7f;
     [SerializeField] private LayerMask _counterLayerMask;
     [SerializeField] private Transform _kitchenObjectHoldPoint; 
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour, IEntityController, IKitchenObject
     private Vector3 _lastInteractDir;
 
     private BaseCounter _selectedCounter;
+    public Vector3 Direction => _direction;
     public KitchenObjectController KitchenObject { get; set; }
     private void Awake()
     {
@@ -117,6 +119,7 @@ public class PlayerController : MonoBehaviour, IEntityController, IKitchenObject
 
     public Transform GetKitchenObjectControllerCounterTransform()
     {
+        OnPickupSomething?.Invoke();
         return _kitchenObjectHoldPoint;
     }
 

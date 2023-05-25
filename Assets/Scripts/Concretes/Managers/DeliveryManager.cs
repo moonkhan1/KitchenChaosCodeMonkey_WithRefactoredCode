@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class DeliveryManager : MonoBehaviour
+public class DeliveryManager : SingletonBase<DeliveryManager>
 {
     public event System.Action OnRecipeSpawn;
     public event System.Action OnRecipeCompleted;
-    public static DeliveryManager Instance { get; private set; }
+    public event System.Action OnRecipeSuccess;
+    public event System.Action OnRecipeFailed;
 
     [SerializeField] private RecipeSOList _recipeListSO;
     private List<RecipeSO> waitingRecipeSOList;
@@ -18,10 +20,7 @@ public class DeliveryManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
+        MakeSingleton(this);
         waitingRecipeSOList = new List<RecipeSO>();
     }
 
@@ -53,12 +52,14 @@ public class DeliveryManager : MonoBehaviour
                 {
                     waitingRecipeSOList.Remove(waitingRecipeSO);
                     OnRecipeCompleted?.Invoke();
+                    OnRecipeSuccess?.Invoke();
                     Debug.Log("Player delivered correct recipe: " + waitingRecipeSO);
                     return;
                 }
             }
         }
         Debug.Log("Player delivered incorrect recipe");
+        OnRecipeFailed?.Invoke();
         
     }
 

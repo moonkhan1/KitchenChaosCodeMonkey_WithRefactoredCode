@@ -13,6 +13,7 @@ public class PlateCounter : BaseCounter
 
     public event Action OnPlateSpawn; 
     public event Action OnPlateRemoved; 
+    public static event Action<PlateCounter> OnPlateTaken; 
 
     private void Update()
     {
@@ -37,6 +38,7 @@ public class PlateCounter : BaseCounter
             {
                 _plateSpawnAmount--;
                 KitchenObjectController.SpawnKitchenObject(plateKitchenObjectSO, player);
+                OnPlateTaken?.Invoke(this);
                 OnPlateRemoved?.Invoke();
             }
         }

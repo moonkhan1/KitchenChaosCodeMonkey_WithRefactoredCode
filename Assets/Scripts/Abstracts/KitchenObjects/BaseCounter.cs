@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,12 +6,25 @@ using UnityEngine;
 public class BaseCounter : MonoBehaviour, IKitchenObjectsParent
 {
     [SerializeField] private Transform _counterTopPoint;
-    
-    public virtual event System.Action<string> OnAnimationPlay;
-    //public virtual event EventHandler<EventArgs> OnParticlePlay;  
-    public virtual event System.Action<bool> OnParticlePlay;
+    private KitchenObjectController _kitchenObject;
 
-    public KitchenObjectController KitchenObject { get; set; }
+    public virtual event Action<string> OnAnimationPlay;
+    //public virtual event EventHandler<EventArgs> OnParticlePlay;  
+    public virtual event Action<bool> OnParticlePlay;
+
+    public static event Action<BaseCounter> OnKitchenObjectPlacedHere;
+    public KitchenObjectController KitchenObject
+    {
+        get => _kitchenObject;
+        set
+        {
+            _kitchenObject = value;
+            if (_kitchenObject != null)
+            {
+                OnKitchenObjectPlacedHere?.Invoke(this);
+            }
+        }
+    }
 
     public virtual void Interact(PlayerController player)
     {
