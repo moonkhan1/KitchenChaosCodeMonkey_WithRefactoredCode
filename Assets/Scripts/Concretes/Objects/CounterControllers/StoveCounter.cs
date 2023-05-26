@@ -31,7 +31,6 @@ public class StoveCounter : BaseCounter, IHasProgress
             {
                 case State.Idle:
                     OnParticlePlay?.Invoke(false);
-                    OnStateChanged?.Invoke(State.Idle);
                     break;
                 case State.Frying:
                     _fryingTimer += Time.deltaTime;
@@ -44,6 +43,7 @@ public class StoveCounter : BaseCounter, IHasProgress
                         _burningTimer = 0f;
                         _burnedRecipeSo = GetBurnedOutputFromInput(KitchenObject.GetKitchenObjectSO());
                         OnParticlePlay?.Invoke(true);
+                        OnStateChanged?.Invoke(_state);
                     }
                     break;
                 case State.Fried:
@@ -56,12 +56,11 @@ public class StoveCounter : BaseCounter, IHasProgress
                         _state = State.Burned;
                         OnParticlePlay?.Invoke(true);
                         OnProgress?.Invoke(0f);
-                        OnStateChanged?.Invoke(State.Fried);
+                        OnStateChanged?.Invoke(_state);
                     }
                     break;
                 case State.Burned:
                     OnParticlePlay?.Invoke(false);
-                    OnStateChanged?.Invoke(State.Burned);
                     break;
             }
         }
@@ -79,7 +78,7 @@ public class StoveCounter : BaseCounter, IHasProgress
                 player.KitchenObject.KitchenObjectsParent = this;
                 _fryingRecipeSo = GetFriedOutputFromInput(KitchenObject.GetKitchenObjectSO());
                 _state = State.Frying;
-                OnStateChanged?.Invoke(State.Frying);
+                OnStateChanged?.Invoke(_state);
                 _fryingTimer = 0f;
                 OnParticlePlay?.Invoke(true);
                 OnProgress?.Invoke(_fryingTimer / _fryingRecipeSo.fryingTimerMax);
@@ -93,6 +92,7 @@ public class StoveCounter : BaseCounter, IHasProgress
                 _state = State.Idle;
                 OnParticlePlay?.Invoke(false);
                 OnProgress?.Invoke(0f);
+                OnStateChanged?.Invoke(_state);
             }
             else
             {
@@ -104,6 +104,7 @@ public class StoveCounter : BaseCounter, IHasProgress
                         _state = State.Idle;
                         OnParticlePlay?.Invoke(false);
                         OnProgress?.Invoke(0f);
+                        OnStateChanged?.Invoke(_state);
                     }
                     
                 }

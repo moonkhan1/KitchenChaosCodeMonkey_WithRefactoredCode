@@ -17,6 +17,8 @@ public class DeliveryManager : SingletonBase<DeliveryManager>
     private float _recipeTimerBeforeSpawn;
     private const float _recipeTimerBeforeSpawnMax = 4f;
     private int _waitingMaxRecipeCount = 4;
+    private int _successRecipeDelivered;
+    public int SuccessRecipeDelivered => _successRecipeDelivered;
 
     private void Awake()
     {
@@ -51,6 +53,7 @@ public class DeliveryManager : SingletonBase<DeliveryManager>
                 if (plateIngredientsMatchWithRecipe)
                 {
                     waitingRecipeSOList.Remove(waitingRecipeSO);
+                    _successRecipeDelivered++;
                     OnRecipeCompleted?.Invoke();
                     OnRecipeSuccess?.Invoke();
                     Debug.Log("Player delivered correct recipe: " + waitingRecipeSO);

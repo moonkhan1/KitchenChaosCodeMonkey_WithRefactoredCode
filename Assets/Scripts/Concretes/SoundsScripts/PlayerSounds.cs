@@ -17,7 +17,6 @@ public class PlayerSounds : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(_playerController.Direction.magnitude);
         _footStepsTimer += Time.deltaTime;
         if (_footStepsTimer >= _footStepsTimerMax)
         {

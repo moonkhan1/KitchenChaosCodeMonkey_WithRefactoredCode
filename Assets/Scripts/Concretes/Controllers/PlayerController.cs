@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour, IEntityController, IKitchenObject
 
     private void HandleInteractionAlternativeOnClick(object sender, EventArgs e)
     {
+        if(!GameManager.Instance.IsGamePlaying()) return;
         if (_selectedCounter != null)
         {
             _selectedCounter.InteractAlternate(this);
@@ -55,6 +56,7 @@ public class PlayerController : MonoBehaviour, IEntityController, IKitchenObject
 
     private void HandleInteractionOnClick(object sender, EventArgs e)
     {
+        if(!GameManager.Instance.IsGamePlaying()) return;
         if (_selectedCounter != null)
         {
             _selectedCounter.Interact(this);
