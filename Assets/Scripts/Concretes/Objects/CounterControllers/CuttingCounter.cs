@@ -13,6 +13,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
    private const string CUT_ANIMATION = "Cut";
    private int cuttingProgress;
 
+   public static void ResetStaticData() => OnCut = null;
    public override void Interact(PlayerController player)
    {
       if (!HasKitchenObject())

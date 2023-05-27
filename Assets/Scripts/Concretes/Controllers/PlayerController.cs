@@ -29,10 +29,8 @@ public class PlayerController : MonoBehaviour, IEntityController, IKitchenObject
     public KitchenObjectController KitchenObject { get; set; }
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
+        Instance = this;
+        
         _transform = GetComponent<Transform>();
         _input = GetComponent<InputReader>();
         _mover = new MoveWithCharCont(this);

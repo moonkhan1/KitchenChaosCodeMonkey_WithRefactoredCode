@@ -26,6 +26,7 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectsParent
         }
     }
 
+    public static void ResetStaticData() => OnKitchenObjectPlacedHere = null;
     public virtual void Interact(PlayerController player)
     {
         Debug.LogError("BaseCounter.Interact()");

@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class GameManager : SingletonBase<GameManager>
 {
-    public event System.Action OnStateChanged; 
+    public event System.Action OnStateChanged;
+    public event System.Action OnGamePaused;
+    public event System.Action OnGameUnPaused;
     private enum State
     {
         WaitingToStart,
@@ -18,11 +21,17 @@ public class GameManager : SingletonBase<GameManager>
     private float _countdownToStart = 3f;
     private float _gamePlayingTime;
     private float _gamePlayingTimeMax = 15f;
+    private bool IsGamePause = false;
     public float GamePlayTimer => 1 - (_gamePlayingTime / _gamePlayingTimeMax);
 
     private void Awake()
     {
         MakeSingleton(this);
+    }
+
+    private void Start()
+    {
+        InputReader.Instance.OnPause += InputReader_OnPause;
     }
 
     private void Update()
@@ -58,6 +67,25 @@ public class GameManager : SingletonBase<GameManager>
                 break;
         }
         Debug.Log(_state);
+    }
+    private void InputReader_OnPause()
+    {
+        TogglePauseGame();
+    }
+
+    public void TogglePauseGame()
+    {
+        IsGamePause = !IsGamePause;
+        if (IsGamePause)
+        {
+            OnGamePaused?.Invoke();
+            Time.timeScale = 0;
+        }
+        else
+        {
+            OnGameUnPaused?.Invoke();
+            Time.timeScale = 1f;
+        }
     }
 
     public bool IsGamePlaying()
