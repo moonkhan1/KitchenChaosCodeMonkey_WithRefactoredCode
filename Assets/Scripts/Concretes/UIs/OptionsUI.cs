@@ -12,6 +12,7 @@ public class OptionsUI : SingletonBase<OptionsUI>
     [SerializeField] private TextMeshProUGUI _soundEffectText;
     [SerializeField] private TextMeshProUGUI _musicText;
 
+    private Action _onCloseButtonPressed;
     private void Awake()
     {
         MakeSingleton(this);
@@ -25,7 +26,11 @@ public class OptionsUI : SingletonBase<OptionsUI>
             MusicManager.Instance.ChangeVolume();
             UpdateVisual();
         });
-        _closeButton.onClick.AddListener(Hide);
+        _closeButton.onClick.AddListener(() =>
+        {
+            Hide();
+            _onCloseButtonPressed();
+        });
         _keysBindingsButton.onClick.AddListener(() =>
         {
             KeyBindingsUI.Instance.Show();
@@ -50,6 +55,17 @@ public class OptionsUI : SingletonBase<OptionsUI>
         _soundEffectText.text = "Sound Effects: " + Mathf.Round(SoundManager.Instance.Volume * 10f);
         _musicText.text = "Music: " + Mathf.Round(MusicManager.Instance.Volume * 10f);
     }
-    public void Show() => gameObject.SetActive(true);
+
+    public void ShowPause(Action onCloseButtonPressed)
+    {
+        _onCloseButtonPressed = onCloseButtonPressed;
+        gameObject.SetActive(true);
+        _soundEffectsButton.Select();
+    } 
+    public void Show()
+    {
+        gameObject.SetActive(true);
+        _soundEffectsButton.Select();
+    } 
     public void Hide() => gameObject.SetActive(false);
 }

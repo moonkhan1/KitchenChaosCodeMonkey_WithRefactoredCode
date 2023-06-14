@@ -16,6 +16,9 @@ public class KeyBindingsUI : SingletonBase<KeyBindingsUI>
     [SerializeField] private Button _interactionButton;
     [SerializeField] private Button _interactionAlternativeButton;
     [SerializeField] private Button _pauseButton;
+    [SerializeField] private Button _interactionButtonGamepad;
+    [SerializeField] private Button _interactionAlternativeButtonGamepad;
+    [SerializeField] private Button _pauseButtonGamepad;
     [Header("Key Text in buttons")]
     [SerializeField] private TextMeshProUGUI _moveUpText;
     [SerializeField] private TextMeshProUGUI _moveDownText;
@@ -24,6 +27,9 @@ public class KeyBindingsUI : SingletonBase<KeyBindingsUI>
     [SerializeField] private TextMeshProUGUI _interactionText;
     [SerializeField] private TextMeshProUGUI _interactionAlternativeText;
     [SerializeField] private TextMeshProUGUI _pauseText;
+    [SerializeField] private TextMeshProUGUI _interactionTextGamepad;
+    [SerializeField] private TextMeshProUGUI _interactionAlternativeTextGamepad;
+    [SerializeField] private TextMeshProUGUI _pauseTextGamepad;
 
     [SerializeField] private Transform _pressToAnyKeyToRebindTransform;
 
@@ -63,6 +69,18 @@ public class KeyBindingsUI : SingletonBase<KeyBindingsUI>
         {
             RebindBinding(InputReader.Bindings.Pause);
         });
+        _interactionButtonGamepad.onClick.AddListener(() =>
+        {
+            RebindBinding(InputReader.Bindings.Gamepad_Interact);
+        });
+        _interactionAlternativeButtonGamepad.onClick.AddListener(() =>
+        {
+            RebindBinding(InputReader.Bindings.Gamepad_InteractAlternative);
+        });
+        _pauseButtonGamepad.onClick.AddListener(() =>
+        {
+            RebindBinding(InputReader.Bindings.Gamepad_Pause);
+        });
     }
 
     private void Start()
@@ -87,10 +105,17 @@ public class KeyBindingsUI : SingletonBase<KeyBindingsUI>
         _interactionText.text = InputReader.Instance.GetBindingText(InputReader.Bindings.Interaction);
         _interactionAlternativeText.text = InputReader.Instance.GetBindingText(InputReader.Bindings.InteractionAlternative);
         _pauseText.text = InputReader.Instance.GetBindingText(InputReader.Bindings.Pause);
+        _interactionTextGamepad.text = InputReader.Instance.GetBindingText(InputReader.Bindings.Gamepad_Interact);
+        _interactionAlternativeTextGamepad.text = InputReader.Instance.GetBindingText(InputReader.Bindings.Gamepad_InteractAlternative);
+        _pauseTextGamepad.text = InputReader.Instance.GetBindingText(InputReader.Bindings.Gamepad_Pause);
     }
 
 
-    public void Show() => gameObject.SetActive(true);
+    public void Show()
+    {
+        gameObject.SetActive(true);
+        _moveUpButton.Select();   
+    }
     public void Hide() => gameObject.SetActive(false);
 
     private void ShowPressToRebindKey() => _pressToAnyKeyToRebindTransform.gameObject.SetActive(true);

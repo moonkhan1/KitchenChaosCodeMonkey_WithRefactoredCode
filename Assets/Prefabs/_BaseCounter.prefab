@@ -89,5 +89,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c69e0f3ff03304b42b284edd8d814182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _kitchenObjecsSo: {fileID: 0}
   _counterTopPoint: {fileID: 0}
+  kitchenObjectsSo: {fileID: 0}

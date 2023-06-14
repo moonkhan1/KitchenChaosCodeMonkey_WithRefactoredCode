@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -17,10 +18,9 @@ public class GameManager : SingletonBase<GameManager>
     }
 
     private State _state;
-    private float _waitingToStart = 1f;
     private float _countdownToStart = 3f;
     private float _gamePlayingTime;
-    private float _gamePlayingTimeMax = 15f;
+    private float _gamePlayingTimeMax = 30f;
     private bool IsGamePause = false;
     public float GamePlayTimer => 1 - (_gamePlayingTime / _gamePlayingTimeMax);
 
@@ -32,6 +32,16 @@ public class GameManager : SingletonBase<GameManager>
     private void Start()
     {
         InputReader.Instance.OnPause += InputReader_OnPause;
+        InputReader.Instance.OnInteraction += InputReader_OnInteraction;
+    }
+
+    private void InputReader_OnInteraction(object sender, EventArgs e)
+    {
+        if (_state == State.WaitingToStart)
+        {
+            _state = State.CountdownToStart;
+            OnStateChanged?.Invoke();
+        }
     }
 
     private void Update()
@@ -39,12 +49,6 @@ public class GameManager : SingletonBase<GameManager>
         switch (_state)
         {
             case State.WaitingToStart:
-                _waitingToStart -= Time.deltaTime;
-                if (_waitingToStart < 0f)
-                {
-                    _state = State.CountdownToStart;
-                    OnStateChanged?.Invoke();
-                }
                 break;
             case State.CountdownToStart:
                 _countdownToStart -= Time.deltaTime;

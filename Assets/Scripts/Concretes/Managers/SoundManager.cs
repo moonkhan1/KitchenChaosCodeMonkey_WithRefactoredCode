@@ -65,15 +65,24 @@ public class SoundManager : SingletonBase<SoundManager>
         AudioClip audioClip = audioClipArray[Random.Range(0, audioClipArray.Length)];
         PlaySound(audioClip, position, volumeMultiplayer);
     }
-    public void PlayFootstepsSound(Vector3 position, float volume)
-    {
-        PlaySound(_audioClipsSoArrays.footsteps, position, volume);
-    }
+   
     private void PlaySound(AudioClip audioClip, Vector3 position, float volumeMultiplayer = 1f)
     {
         AudioSource.PlayClipAtPoint(audioClip, position, volumeMultiplayer * Volume);
     }
+    public void PlayFootstepsSound(Vector3 position, float volume)
+    {
+        PlaySound(_audioClipsSoArrays.footsteps, position, volume);
+    }
 
+    public void PlayCountdownSound()
+    {
+        PlaySound(_audioClipsSoArrays.warning, Vector3.zero);
+    }
+    public void PlayWarningSound(Vector3 position)
+    {
+        PlaySound(_audioClipsSoArrays.warning, position);
+    }
     public void ChangeVolume()
     {
         Volume += 0.1f;

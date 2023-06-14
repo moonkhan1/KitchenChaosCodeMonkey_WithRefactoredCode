@@ -60,7 +60,7 @@ public class MoveWithCharCont : IMover
         var moveDistance = movement.magnitude;
 
         Vector3 moveDirX = new Vector3(movement.x, 0f, 0f);
-        return movement.x != 0f && !Physics.CapsuleCast(_characterController.transform.position, _characterController.transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
+        return (movement.x < -0.5f || movement.x > 0.5f) && !Physics.CapsuleCast(_characterController.transform.position, _characterController.transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
     }
 
     private bool CanMoveOnlyInZ(Vector3 movement)
@@ -70,7 +70,7 @@ public class MoveWithCharCont : IMover
         var moveDistance = movement.magnitude;
 
         Vector3 moveDirZ = new Vector3(0f, 0f, movement.z);
-        return movement.z != 0f && !Physics.CapsuleCast(_characterController.transform.position, _characterController.transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
+        return (movement.z < -0.5f || movement.z > 0.5f) && !Physics.CapsuleCast(_characterController.transform.position, _characterController.transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
     }
     
 }

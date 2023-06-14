@@ -31,12 +31,15 @@ public class DeliveryManager : SingletonBase<DeliveryManager>
         _recipeTimerBeforeSpawn += Time.deltaTime;
         if (_recipeTimerBeforeSpawn >= _recipeTimerBeforeSpawnMax)
         {
-            if (waitingRecipeSOList.Count >= _waitingMaxRecipeCount) return;
-            RecipeSO _waitingRecipeSO = _recipeListSO.recipeSOList[Random.Range(0, _recipeListSO.recipeSOList.Count)];
-            waitingRecipeSOList.Add(_waitingRecipeSO);
-            OnRecipeSpawn?.Invoke();
-            Debug.Log(_waitingRecipeSO.recipeName);
-            _recipeTimerBeforeSpawn = 0f;
+            if (GameManager.Instance.IsGamePlaying() && waitingRecipeSOList.Count < _waitingMaxRecipeCount)
+            {
+                RecipeSO _waitingRecipeSO = _recipeListSO.recipeSOList[Random.Range(0, _recipeListSO.recipeSOList.Count)];
+                waitingRecipeSOList.Add(_waitingRecipeSO);
+                OnRecipeSpawn?.Invoke();
+                Debug.Log(_waitingRecipeSO.recipeName);
+                _recipeTimerBeforeSpawn = 0f;
+            }
+
         }
         
     }

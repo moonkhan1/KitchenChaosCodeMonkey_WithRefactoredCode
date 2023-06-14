@@ -12,7 +12,8 @@ public class InputReader : MonoBehaviour, IInputReader
     public bool IsMoving { get; private set; }
     public event EventHandler OnInteraction;
     public event EventHandler OnInteractionAlternative;
-    public event System.Action OnPause;
+    public event Action OnPause;
+    public event Action OnBindingRebind;
 
     public enum Bindings
     {
@@ -22,7 +23,10 @@ public class InputReader : MonoBehaviour, IInputReader
         MoveRight,
         Interaction,
         InteractionAlternative,
-        Pause
+        Pause,
+        Gamepad_Interact,
+        Gamepad_InteractAlternative,
+        Gamepad_Pause
     }
     private Inputs _inputs;
     private void Awake()
@@ -89,6 +93,12 @@ public class InputReader : MonoBehaviour, IInputReader
                 return _inputs.Player.InteractAlternative.bindings[0].ToDisplayString();
             case Bindings.Pause:
                 return _inputs.Player.Pause.bindings[0].ToDisplayString();
+            case Bindings.Gamepad_Interact:
+                return _inputs.Player.Interact.bindings[1].ToDisplayString();
+            case Bindings.Gamepad_InteractAlternative:
+                return _inputs.Player.InteractAlternative.bindings[1].ToDisplayString();
+            case Bindings.Gamepad_Pause:
+                return _inputs.Player.Pause.bindings[1].ToDisplayString();
             case Bindings.MoveUp:
                 return _inputs.Player.Move.bindings[1].ToDisplayString();
             case Bindings.MoveDown:
@@ -97,6 +107,7 @@ public class InputReader : MonoBehaviour, IInputReader
                 return _inputs.Player.Move.bindings[3].ToDisplayString();
             case Bindings.MoveRight:
                 return _inputs.Player.Move.bindings[4].ToDisplayString();
+
         }
     }
 
@@ -136,6 +147,18 @@ public class InputReader : MonoBehaviour, IInputReader
                 inputAction = _inputs.Player.Pause;
                 bindingIndex = 0;
                 break;
+            case Bindings.Gamepad_Interact:
+                inputAction = _inputs.Player.Interact;
+                bindingIndex = 1;
+                break;
+            case Bindings.Gamepad_InteractAlternative:
+                inputAction = _inputs.Player.InteractAlternative;
+                bindingIndex = 1;
+                break;
+            case Bindings.Gamepad_Pause:
+                inputAction = _inputs.Player.Pause;
+                bindingIndex = 1;
+                break;
         }
         inputAction.PerformInteractiveRebinding(bindingIndex).OnComplete(callback =>
         {
@@ -145,6 +168,8 @@ public class InputReader : MonoBehaviour, IInputReader
 
             PlayerPrefs.SetString(PLAYER_PREFS_BINDINGS,_inputs.SaveBindingOverridesAsJson());
             PlayerPrefs.Save();
+            
+            OnBindingRebind?.Invoke();
         }).Start();
     }
 }

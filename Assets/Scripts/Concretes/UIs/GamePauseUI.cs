@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +15,8 @@ public class GamePauseUI : MonoBehaviour
         });
         _optionsButton.onClick.AddListener(() =>
         {
-            OptionsUI.Instance.Show();
+            Hide();
+            OptionsUI.Instance.ShowPause(Show);
         });
         _quitButton.onClick.AddListener(() =>
         {
@@ -43,6 +41,11 @@ public class GamePauseUI : MonoBehaviour
         Show();
     }
 
-    private void Show() => gameObject.SetActive(true);
+    private void Show()
+    { 
+        gameObject.SetActive(true);
+        _returnButton.Select();
+        
+    }
     private void Hide() => gameObject.SetActive(false);
 }
