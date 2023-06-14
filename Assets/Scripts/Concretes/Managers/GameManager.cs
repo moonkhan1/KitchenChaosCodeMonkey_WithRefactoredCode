@@ -20,7 +20,7 @@ public class GameManager : SingletonBase<GameManager>
     private State _state;
     private float _countdownToStart = 3f;
     private float _gamePlayingTime;
-    private float _gamePlayingTimeMax = 30f;
+    private float _gamePlayingTimeMax = 90f;
     private bool IsGamePause = false;
     public float GamePlayTimer => 1 - (_gamePlayingTime / _gamePlayingTimeMax);
 
