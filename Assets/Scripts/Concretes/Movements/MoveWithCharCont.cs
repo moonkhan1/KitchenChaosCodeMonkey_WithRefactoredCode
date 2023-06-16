@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using Kitchen.Abstract.Controller;
+using Unity.Netcode;
 using UnityEngine;
 
 public class MoveWithCharCont : IMover
@@ -13,13 +12,14 @@ public class MoveWithCharCont : IMover
     {
         _characterController = entityController.transform.GetComponent<CharacterController>();
     }
+    
     public void MoveAction(Vector3 direction, float speed)
     {
         if (direction.magnitude == 0f)
             return;
-
+    
         Vector3 movement = direction * Time.fixedDeltaTime * speed;
-
+    
         if (!CanMoveInDirection(movement))
         {
             if (CanMoveOnlyInX(movement))
@@ -36,7 +36,7 @@ public class MoveWithCharCont : IMover
                 return;
             }
         }
-
+    
         _characterController.Move(movement);
         movement.y = 0f;
         if (movement == Vector3.zero)

@@ -20,7 +20,7 @@ public class GameManager : SingletonBase<GameManager>
     private State _state;
     private float _countdownToStart = 3f;
     private float _gamePlayingTime;
-    private float _gamePlayingTimeMax = 90f;
+    private float _gamePlayingTimeMax = 300f;
     private bool IsGamePause = false;
     public float GamePlayTimer => 1 - (_gamePlayingTime / _gamePlayingTimeMax);
 
@@ -33,6 +33,10 @@ public class GameManager : SingletonBase<GameManager>
     {
         InputReader.Instance.OnPause += InputReader_OnPause;
         InputReader.Instance.OnInteraction += InputReader_OnInteraction;
+        
+        //Debug trigger game start automatically
+        _state = State.CountdownToStart;
+        OnStateChanged?.Invoke();
     }
 
     private void InputReader_OnInteraction(object sender, EventArgs e)

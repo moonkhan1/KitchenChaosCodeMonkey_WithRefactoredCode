@@ -1,11 +1,24 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour
 {
+    
     [SerializeField] private TextMeshProUGUI _recipeDeliveredText;
+    [SerializeField] private Button _playAgainButton;
+
+    private void Awake()
+    {
+        _playAgainButton.onClick.AddListener(() =>
+        {
+            SceneManager.LoadSceneAsync("GameScene");
+        });
+}
 
     private void Start()
     {
@@ -29,6 +42,7 @@ public class GameOverUI : MonoBehaviour
     private void Show()
     {
         gameObject.gameObject.SetActive(true);
+        _playAgainButton.Select();
     }
     private void Hide()
     {

@@ -22,7 +22,7 @@ public class SoundManager : SingletonBase<SoundManager>
         DeliveryManager.Instance.OnRecipeSuccess += DeliveryManagerOnRecipeSuccess;
         DeliveryManager.Instance.OnRecipeFailed += DeliveryManagerOnRecipeFailed;
         CuttingCounter.OnCut += CuttingCounterOnCut;
-        PlayerController.Instance.OnPickupSomething += PlayerOnPickupSomething;
+        //PlayerController.Instance.OnPickupSomething += PlayerOnPickupSomething;
         TrashCounter.OnThrow += TrashCounterOnThrow;
         BaseCounter.OnKitchenObjectPlacedHere += BaseCounterOnObject;
     }
@@ -40,7 +40,7 @@ public class SoundManager : SingletonBase<SoundManager>
 
     private void PlayerOnPickupSomething()
     {
-        PlaySound(_audioClipsSoArrays.objectPickUps, PlayerController.Instance.transform.position);
+        //PlaySound(_audioClipsSoArrays.objectPickUps, PlayerController.Instance.transform.position);
     }
 
     private void CuttingCounterOnCut(CuttingCounter cuttingCounter)

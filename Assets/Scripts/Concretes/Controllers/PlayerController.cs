@@ -1,10 +1,11 @@
 using System;
 using Kitchen.Abstract.Controller;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour, IEntityController, IKitchenObjectsParent
+public class PlayerController : NetworkBehaviour, IEntityController, IKitchenObjectsParent
 {
-    public static PlayerController Instance { get; private set; }
+   //public static PlayerController Instance { get; private set; }
     
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
@@ -17,7 +18,7 @@ public class PlayerController : MonoBehaviour, IEntityController, IKitchenObject
     [SerializeField] private LayerMask _counterLayerMask;
     [SerializeField] private Transform _kitchenObjectHoldPoint; 
     private Transform _transform;
-    private IInputReader _input;
+    //private IInputReader _input;
     private IMover _mover;
     private IAnimator _animator;
     
@@ -29,18 +30,18 @@ public class PlayerController : MonoBehaviour, IEntityController, IKitchenObject
     public KitchenObjectController KitchenObject { get; set; }
     private void Awake()
     {
-        Instance = this;
+        //Instance = this;
         
         _transform = GetComponent<Transform>();
-        _input = GetComponent<InputReader>();
+        //_input = GetComponent<InputReader>();
         _mover = new MoveWithCharCont(this);
         _animator = new AnimationController(this);
     }
 
     private void Start()
     {
-        _input.OnInteraction += HandleInteractionOnClick;
-        _input.OnInteractionAlternative += HandleInteractionAlternativeOnClick;
+        InputReader.Instance.OnInteraction += HandleInteractionOnClick;
+        InputReader.Instance.OnInteractionAlternative += HandleInteractionAlternativeOnClick;
     }
 
     private void HandleInteractionAlternativeOnClick(object sender, EventArgs e)
@@ -63,18 +64,20 @@ public class PlayerController : MonoBehaviour, IEntityController, IKitchenObject
 
     void Update()
     {
-        _direction = _input.Direction;
+        _direction = InputReader.Instance.Direction;
     }
 
     private void FixedUpdate()
     {
+        if(!IsOwner) return;
         _mover.MoveAction(_direction, _speed);
         HandleInteraction();
     }
 
     private void LateUpdate()
     {
-        _animator.MoveAnimation(_input.IsMoving);
+        if(!IsOwner) return;
+        _animator.MoveAnimation(InputReader.Instance.IsMoving);
     }
     
 
